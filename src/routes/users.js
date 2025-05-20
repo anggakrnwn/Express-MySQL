@@ -1,19 +1,21 @@
-const express = require('express')
-
-const UserController = require('../controllers/users')
+const express = require("express");
+const {
+  authenticate,
+  authorizeRoles,
+  checkOwnerOrAdmin,
+} = require("../middleware/auth");
+const UserController = require("../controllers/users");
 
 const router = express.Router();
 
-// create post
-router.post('/', UserController.createNewUser)
+router.use(authenticate);
 
-// read get
-router.get('/', UserController.getAllUsers)
+router.get("/", UserController.getAllUsers);
 
-// update patch
-router.patch('/:id', UserController.updateUser)
+router.post("/", authorizeRoles(2), UserController.createNewUser);
 
-// delete delete
-router.delete('/:id', UserController.deleteUser)
+router.patch("/:id", checkOwnerOrAdmin, UserController.updateUser);
+
+router.delete("/:id", authorizeRoles(2), UserController.deleteUser);
 
 module.exports = router;

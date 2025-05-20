@@ -1,2 +1,4 @@
 node_modules/
 .env
+adminpass.js
+generateSecret.js
